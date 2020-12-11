@@ -12,16 +12,19 @@ void judge_big_little_end()
 
     // 如果为 1，则为小端存储模式，否则为大端模式
     if (c)
-        cout << "小端" <<endl;
+    {
+        cout << "小端模式" <<endl;
+    }
     else
-        cout << "大端" <<endl;
+    {
+        cout << "大端模式" <<endl;
+    }
 }
-
 
 // 主函数
 int main()
 {
     // 调用判断大小端的函数
-    judge_big_little_end();  
+    judge_big_little_end();
     return 0;
 }
