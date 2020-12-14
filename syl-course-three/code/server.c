@@ -1,12 +1,14 @@
+/*
+    file: server.c
+    desc: 服务器端的作用是从客户端读取字符数据，然后将每个字符转为大写并发回给客户端。
+*/
+
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include <errno.h>
-#include <pthread.h>
 
 #define SERV_PORT 8899  // 宏定义服务器端口为：8899
 

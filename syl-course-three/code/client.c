@@ -1,11 +1,13 @@
+/*
+    file: client.c
+    desc: 客户端的作用是发送一个字符串（hello world）给服务器端，然后接收服务器处理后的字符串，并打印出来。
+*/
+
 #include <stdio.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include <errno.h>
-#include <pthread.h>
 
 #define SERV_PORT 8899  // 宏定义服务器端口为：8899
 
@@ -35,8 +37,8 @@ int main(int argc, char *argv[])
     }
 
     char buf[BUFSIZ];
-    int counter = 10;                               // 10 次计数，配合下面的每次睡眠 1 秒
-    while (--counter) {                             // 则相当于发送 10 次数据，即打印 10 次 hello world
+    int counter = 6;                                // 6 次计数，配合下面的每次睡眠 1 秒
+    while (--counter) {                             // 则相当于发送 6 次数据，即打印 6 次 hello world
         write(clientfd, "hello world\n", 12);       // 发送 hello world 给服务器端
         conn_ret= read(clientfd, buf, sizeof(buf)); // 读取服务器端返回的数据
         write(STDOUT_FILENO, buf, conn_ret);        // 将读取到的内容写到标准输出
