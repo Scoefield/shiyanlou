@@ -16,7 +16,7 @@
 #include "socket-comm.h"
 
 #define MAXLINE 60      // 定义缓冲区长度
-#define SERV_PORT 8080  // 端口号
+#define SERV_PORT 8080  // 定义端口号
 
 // 信号捕捉函数，完成子进程回收
 void do_sigchild(int num)
@@ -24,8 +24,11 @@ void do_sigchild(int num)
     // 回收子进程用 waitpid，参数 0：同一个进程组，NULL：不关心状态，WNOHANG：不挂起（非阻塞）
 	while (waitpid(0, NULL, WNOHANG) > 0);
 }
+
+// 主函数（入口函数）
 int main(void)
 {
+	// 变量的声明
 	struct sockaddr_in servaddr, cliaddr;
 	socklen_t cliaddr_len;
 	int listenfd, connfd;
@@ -61,7 +64,7 @@ int main(void)
         // 接收客户端连接请求
 		connfd = Accept(listenfd, (struct sockaddr *)&cliaddr, &cliaddr_len);
 
-        // 创建子进程，pid=0
+        // fork 创建子进程，pid=0
 		pid = fork();
 		if (pid == 0) {
             // 创建子进程后，关闭用于建立连接的套接字 lfd
