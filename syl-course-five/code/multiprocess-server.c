@@ -19,7 +19,7 @@
 #define SERV_PORT 8080  // 定义端口号
 
 // 信号捕捉函数，完成子进程回收
-void do_sigchild(int num)
+void do_child_sign(int num)
 {
     // 回收子进程用 waitpid，参数 0：同一个进程组，NULL：不关心状态，WNOHANG：不挂起（非阻塞）
 	while (waitpid(0, NULL, WNOHANG) > 0);
@@ -39,7 +39,7 @@ int main(void)
 
     // 信号捕捉处理
 	struct sigaction newact;
-	newact.sa_handler = do_sigchild;
+	newact.sa_handler = do_child_sign;
 	sigemptyset(&newact.sa_mask);
 	newact.sa_flags = 0;
 	sigaction(SIGCHLD, &newact, NULL);

@@ -15,8 +15,10 @@
 #define SERV_PORT 8080  // 连接到服务端的端口号
 
 
+// 客户端主函数（入口函数）
 int main(int argc, char *argv[])
 {
+	// 变量声明
 	struct sockaddr_in servaddr;
 	char buf[MAXLINE];
 	int sockfd, n;
