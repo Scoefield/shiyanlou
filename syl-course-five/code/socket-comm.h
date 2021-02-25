@@ -1,3 +1,7 @@
+/*
+    file: socket-comm.h
+*/
+
 #ifndef __WRAP_H_
 #define __WRAP_H_
 
