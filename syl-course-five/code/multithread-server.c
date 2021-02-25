@@ -23,8 +23,8 @@ struct s_info {
 	int connfd;
 };
 
-// 真正处理数据的函数 working
-void *working(void *arg)
+// 真正处理数据的函数 handle_work
+void *handle_work(void *arg)
 {
     // 声明相关变量
 	int n,i;
@@ -59,7 +59,7 @@ void *working(void *arg)
 // 主函数（入口函数）
 int main(void)
 {
-    // 地址结构变量声明
+    // 地址结构以及线程指针变量声明
 	struct sockaddr_in servaddr, cliaddr;
 	socklen_t cliaddr_len;
 	int listenfd, connfd;
@@ -67,7 +67,7 @@ int main(void)
 	pthread_t tid;
 	struct s_info ts[256];
 
-    // 创建套接字
+    // 1. 创建套接字
 	listenfd = Socket(AF_INET, SOCK_STREAM, 0);
 
 	bzero(&servaddr, sizeof(servaddr));
@@ -75,10 +75,11 @@ int main(void)
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	servaddr.sin_port = htons(SERV_PORT);
 
-    // 绑定地址信息并监听，设置监听上限为 20
+    // 2. 绑定地址信息并监听，设置监听上限为 10
 	Bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
-	Listen(listenfd, 20);
+	Listen(listenfd, 10);
 
+	// 3. 通信数据处理
 	printf("Accepting connections ...\n");
 	while (1) {
 		cliaddr_len = sizeof(cliaddr);
@@ -86,8 +87,8 @@ int main(void)
 		ts[i].cliaddr = cliaddr;
 		ts[i].connfd = connfd;
 		
-        // 当达到线程最大值时，会有出错处理, 增加服务器的可用性
-		pthread_create(&tid, NULL, do_work, (void*)&ts[i]);
+        // pthread_create 创建一个线程
+		pthread_create(&tid, NULL, handle_work, (void*)&ts[i]);
 		i++;
 	}
 	return 0;
