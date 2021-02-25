@@ -12,7 +12,7 @@ import (
 	"os"
 )
 
-// 专门处理获取标准输入（键盘输入os.Stdin），并将输入数据发送到服务端
+// 数据处理
 func HandleData(conn net.Conn) {
 	str := make([]byte, 1024)
 	for {
@@ -37,7 +37,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	// 开启一个协程（HandleData为处理函数），专门处理获取标准输入（键盘输入os.Stdin），并将输入数据发送到服务端
+	// 开启一个协程（HandleData为处理函数），专门处理获取标准输入，并将输入数据发送到服务端
 	go HandleData(conn)
 
 	// 循环读取服务端发过来的数据，写到 buf

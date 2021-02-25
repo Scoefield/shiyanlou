@@ -51,6 +51,7 @@ func main() {
 		fmt.Printf("net.Listen() err:%v\n", err)
 		return
 	}
+	// defer 延迟关闭连接，即主函数结束前关闭
 	defer listener.Close()
 
 	// 循环监听客户端连接请求
@@ -63,7 +64,7 @@ func main() {
 			return
 		}
 
-		// 连接成功，就开一个协程处理：服务器和客户端的数据通信
+		// 连接成功，开启一个协程：用于处理服务器和客户端的数据通信
 		go HandleConnectReq(conn)
 	}
 }
