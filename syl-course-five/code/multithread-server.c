@@ -18,7 +18,7 @@
 #define SERV_PORT 6666  // 服务端端口号
 
 // 定义地址信息结构体
-struct s_info {
+struct socket_info {
 	struct sockaddr_in cliaddr;
 	int connfd;
 };
@@ -28,7 +28,7 @@ void *handle_work(void *arg)
 {
     // 声明相关变量
 	int n,i;
-	struct s_info *ts = (struct s_info*)arg;
+	struct socket_info *ts = (struct socket_info*)arg;
 	char buf[MAXLINE];
 	char str[INET_ADDRSTRLEN];
 
@@ -65,7 +65,7 @@ int main(void)
 	int listenfd, connfd;
 	int i = 0;
 	pthread_t tid;
-	struct s_info ts[256];
+	struct socket_info ts[256];
 
     // 1. 创建套接字
 	listenfd = Socket(AF_INET, SOCK_STREAM, 0);
