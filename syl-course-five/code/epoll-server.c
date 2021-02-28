@@ -12,12 +12,14 @@
 
 #include "socket-comm.h"
 
-#define MAXLINE 80
-#define SERV_PORT 6666
-#define OPEN_MAX 1024
+#define MAXLINE 80		// buf 缓冲区大小
+#define SERV_PORT 6666	// 端口号
+#define OPEN_MAX 1024	// 打开客户端最大值 1024
 
+// 服务端主函数（入口函数）
 int main(int argc, char *argv[])
 {
+	// 变量声明
 	int i, j, maxi, listenfd, connfd, sockfd;
 	int nready, efd, res;
 	ssize_t n;
@@ -27,6 +29,7 @@ int main(int argc, char *argv[])
 	struct sockaddr_in cliaddr, servaddr;
 	struct epoll_event tep, ep[OPEN_MAX];
 
+	// 1. 创建套接字
 	listenfd = Socket(AF_INET, SOCK_STREAM, 0);
 
 	bzero(&servaddr, sizeof(servaddr));
@@ -34,14 +37,18 @@ int main(int argc, char *argv[])
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	servaddr.sin_port = htons(SERV_PORT);
 
+	// 2. 绑定地址结构
 	Bind(listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr));
 
-	Listen(listenfd, 20);
+	// 3. 监听客户端连接的到来，设置上限为 10
+	Listen(listenfd, 10);
 
+	// 初始化 client[] 集合
 	for (i = 0; i < OPEN_MAX; i++)
 		client[i] = -1;
 	maxi = -1;
 
+	// 
 	efd = epoll_create(OPEN_MAX);
 	if (efd == -1)
 		perr_exit("epoll_create");
