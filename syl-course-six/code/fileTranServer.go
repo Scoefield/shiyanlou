@@ -2,7 +2,6 @@
 	file: fileTranServer.go
 	runCmd: go run fileTranServer.go
 */
-
 package main
 
 import (

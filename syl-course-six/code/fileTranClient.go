@@ -1,8 +1,7 @@
 /*
 	file: fileTranClient.go
-	runCmd: go run fileTranClient.go
+	runCmd: go run fileTranClient.go fileName.txt
 */
-
 package main
 
 import (
