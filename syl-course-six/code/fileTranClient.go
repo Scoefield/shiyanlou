@@ -9,6 +9,7 @@ import (
 	"io"
 	"net"
 	"os"
+	"strings"
 )
 
 // 发送文件内容
@@ -28,14 +29,16 @@ func sendFileContent(conn net.Conn, fileName string) {
 		n, err := file.Read(buf)
 		if err != nil {
 			if err == io.EOF {
-				fmt.Println("发送文件结束")
+				fmt.Println("文件内容发送成功.")
 			} else {
 				fmt.Printf("file.Read()方法执行错误,错误信息为:%v\n", err)
 			}
 			return
 		}
-		// 将文件内容发送给服务端(接收端)
-		_, err = conn.Write(buf[:n])
+		// 将文件内容转大写后，发送给服务端(接收端)
+		fmt.Println("将文件内容转大写并发送给服务端(接收端)...")
+		newStr := strings.ToUpper(string(buf[:n]))
+		_, err = conn.Write([]byte(newStr))
 	}
 }
 
@@ -62,15 +65,18 @@ func main() {
 	}
 
 	// 发起连接请求，tcp协议，端口号8080，注意这里的端口号要与服务端（接收端）的对应上
+	fmt.Println("向服务端发起连接请求...")
 	conn, err := net.Dial("tcp", "127.0.0.1:8080")
 	if err != nil {
 		fmt.Printf("net.Dial()函数执行出错，错误信息为:%v\n", err)
 		return
 	}
+	fmt.Println("连接服务端成功.")
 	// 延迟关闭连接套接字
 	defer conn.Close()
 
 	// 发送文件名给服务端（接收端）
+	fmt.Println("开始向服务端发送文件名，文件名为:", filePath)
 	_, err = conn.Write([]byte(fileAttr.Name()))
 
 	// 读取服务端（接收端）回发的数据
@@ -83,6 +89,7 @@ func main() {
 
 	// 如果收到服务端（接收端）的应答为"ok"，则写文件内容给服务端
 	if string(buf[:n]) == "ok" {
+		fmt.Println("文件名发送成功，并收到服务端响应的OK信息.")
 		sendFileContent(conn, filePath)
 	}
 }
