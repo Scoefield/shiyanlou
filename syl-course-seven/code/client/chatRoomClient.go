@@ -24,6 +24,7 @@ type Message struct {
 func GetConnect() (conn net.Conn, err error) {
 	// 链接到服务器，这里用本地(localhost)举例，端口号为：8080，tcp 协议
 	conn, err = net.Dial("tcp", "localhost:8080")
+	// 建立连接报错时，打印报错信息
 	if err != nil {
 		fmt.Println("net.Dial err=", err)
 		return
@@ -31,7 +32,7 @@ func GetConnect() (conn net.Conn, err error) {
 	return
 }
 
-// 发送消息到服务端，入参为 连接句柄conn 和 发送消息内容content
+// 发送消息到服务端，入参为 连接句柄conn 和 发送消息内容 content
 func SendMsgToServer(conn net.Conn, content string) (err error) {
 	// 去掉多余到换行符，并打印需要发送的消息内容
 	readContent := strings.Trim(content, "\n")
@@ -41,7 +42,7 @@ func SendMsgToServer(conn net.Conn, content string) (err error) {
 	data := []byte(readContent)
 	_, err = conn.Write(data)
 	if err != nil {
-		fmt.Println("SendGroupMes err=", err.Error())
+		fmt.Println("conn.Write err=", err.Error())
 		return
 	}
 	return
@@ -54,7 +55,6 @@ func ClientSendMsg(conn net.Conn) {
 	// 这里循环获取终端输入的消息
 	for {
 		// bufio 缓冲的方式获取终端输入的消息
-		//fmt.Printf("发送消息: ")
 		inputReader := bufio.NewReader(os.Stdin)
 		// 读取到换行符就结束此次读取消息，并将消息存到 content 变量
 		content, err := inputReader.ReadString('\n')
@@ -62,7 +62,7 @@ func ClientSendMsg(conn net.Conn) {
 			fmt.Println("ReadString err=", err)
 		}
 
-		// 发送终端读取的消息到服务端
+		// 发送终端读取的消息 content 给服务器
 		err = SendMsgToServer(conn, content)
 		if err != nil {
 			fmt.Println("SendGroupMes err=", err)
@@ -86,7 +86,7 @@ func ClientReceiveMsg(conn net.Conn) {
 		if err != nil {
 			fmt.Println("json.Unmarshal err: ", err)
 		}
-		// 打印收到的消息
+		// 打印接收到的消息
 		fmt.Printf("收到[%s]发来的消息: %s\n",  msg.DataSource, msg.Data)
 	}
 }

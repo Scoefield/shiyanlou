@@ -113,7 +113,9 @@ func SubProcess(conn net.Conn, userKey string) (err error) {
 	for {
 		// 读取消息
 		msg, err := ReadData(conn)
+
 		// 报错或者客户端连接断开时，打印提示信息，并将该用户（客户端）在全局队列里剔除掉
+		// 这里用 Go 语言内置的 delete 函数来进行剔除
 		if err != nil {
 			delete(userMgr.onlineUsers, userKey)
 			if err == io.EOF {
@@ -130,7 +132,7 @@ func SubProcess(conn net.Conn, userKey string) (err error) {
 			}
 		}
 
-		// 服务端处理消息
+		// 服务器处理与客户端通讯的消息
 		err = ServerProcessMsg(userKey, &msg)
 		if err != nil {
 			return err
@@ -140,6 +142,7 @@ func SubProcess(conn net.Conn, userKey string) (err error) {
 
 // 客户端加入或离开 ChatRoom，需要发送消息通知每个在线的客户端
 func JoinOrLeaveMsg(userKey string, clientAddr string, msgType int) {
+	// 根据 msgType 的类型来选择是加入还是离开的消息
 	var msgStr string
 	switch msgType {
 	case 1:
@@ -150,7 +153,7 @@ func JoinOrLeaveMsg(userKey string, clientAddr string, msgType int) {
 		fmt.Println("JoinOrLeaveMsg type wrong!")
 	}
 
-	// 将客户端加入聊天室的消息广播出去
+	// 将客户端加入或离开通讯服务（即上线或下线）的消息广播出去
 	var msg Message
 	joinStr := fmt.Sprintf("客户端[%s]已%s【ChatRoom】", clientAddr, msgStr)
 	msg.DataSource = "服务端"
@@ -159,6 +162,7 @@ func JoinOrLeaveMsg(userKey string, clientAddr string, msgType int) {
 	if err != nil {
 		fmt.Println("json.Marshal err=", err)
 	}
+	// 将消息广播出去
 	SendMesToEachOnlineUser(userKey, joinMsg)
 }
 
