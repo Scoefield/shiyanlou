@@ -20,6 +20,7 @@
  
 	 // 返回 respMsg 数据给客户端
 	 _, err := w.Write([]byte(respMsg))
+	 // 错误处理
 	 if err != nil {
 		 fmt.Println(err)
 	 }
@@ -33,6 +34,7 @@
  
 	 // 监听并绑定地址和端口，这里用的是本地地址
 	 err := http.ListenAndServe("127.0.0.1:8080", nil)
+	 // 错误处理
 	 if err != nil {
 		 fmt.Println(err)
 	 }
